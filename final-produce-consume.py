@@ -5,7 +5,7 @@ import random
 
 MAX_BUFFER = 5000
 
-# P-C model using List and Condition var -----------------------------------------
+# 1) P-C model using List and Condition var -----------------------------------------
 
 condition = Condition()
 list_queue = []
@@ -76,7 +76,7 @@ for th in cs_threads:
 
 
 
-# P-C model using Python Queue ---------------------------------------------------
+# 2) P-C model using Python Queue ---------------------------------------------------
 
 q = Queue(MAX_BUFFER)
 class ProducerThreadQueue(Thread):
@@ -85,18 +85,9 @@ class ProducerThreadQueue(Thread):
         self.id = id
     def run(self):
         while True:
-            # condition.acquire()
-            # if len(list_queue) == MAX_BUFFER:
-                # print("Buffer full")
-                # condition.wait()
-            
             data = self.create_data()
             q.put(data)
             print("PRThread[%d] Produced[%d]: " % (self.id,data), list(q.queue))
-            
-            # list_queue.append(data)
-            # condition.notify()
-            # condition.release()
             
             # (3) Producer will need certain time(1~15sec) to produce the resource.
             time.sleep(random.randint(1,15))
@@ -112,21 +103,10 @@ class ConsumerThreadQueue(Thread):
 
     def run(self):
         while True:
-
-            # (5)
-            # condition.acquire()
-            # if len(list_queue) < 1:
-            #     print("Thread[%d]: Buffer Empty" % self.id)
-            #     condition.wait()
-            #     print("Thread[%d]: Woke up" % self.id)
-            # data = list_queue.pop(0)
             
             # (4)
             data = q.get()
             print("CSThread[%d] Consumed[%d]: " % (self.id, data), list(q.queue))
-
-            # condition.notify()
-            # condition.release()
 
             # I assumed that consumer need 3sec to use the resource.
             time.sleep(3)
