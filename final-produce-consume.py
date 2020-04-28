@@ -24,7 +24,7 @@ class ProducerThread(Thread):
             data = self.create_data()
             list_queue.append(data)
             print("PRThread[%d] Produced[%d]: " % (self.id,data), list_queue)
-            condition.notify(1)
+            condition.notify()
             condition.release()
             # (3) Producer will need certain time(1~15sec) to produce the resource.
             time.sleep(random.randint(1,10))
